@@ -725,20 +725,19 @@ h2::after {
 
 /* ===== 奥付 ===== */
 .colophon {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 8px 24px;
+  text-align: center;
   font-size: 0.8rem;
   color: #92a7c4;
   letter-spacing: 0.15em;
 }
 
 .colophon .credit {
+  display: block;
+  max-width: 520px;
+  margin: 16px auto 0;
   font-size: 0.7rem;
+  line-height: 2;
   letter-spacing: 0.05em;
-  text-align: right;
 }
 
 /* ===== 作品詳細モーダル ===== */
