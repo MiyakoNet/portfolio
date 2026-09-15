@@ -116,15 +116,15 @@ if (reduceMotion) {
   typeLoop();
 }
 
-// ===== タイトルを一文字ずつ浮かせる =====
+// ===== タイトルを一文字ずつ浮かせる（ビルド時に span が無い場合のみ＝ローカル開発用） =====
 const titleEl = document.querySelector(".masthead h1");
-if (titleEl && !reduceMotion) {
+if (titleEl && !titleEl.querySelector("span") && !reduceMotion) {
   const chars = Array.from(titleEl.textContent);
   titleEl.textContent = "";
   chars.forEach((ch, i) => {
     const span = document.createElement("span");
     span.textContent = ch;
-    span.style.animationDelay = (0.2 + i * 0.07) + "s";
+    span.style.animationDelay = (0.2 + i * 0.07).toFixed(2) + "s";
     titleEl.appendChild(span);
   });
 }

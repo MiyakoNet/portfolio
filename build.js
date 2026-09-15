@@ -54,6 +54,11 @@ const css = fs.readFileSync(path.join(root, "css", "miyako.css"), "utf8");
 const minCss = esbuild.transformSync(css, { loader: "css", minify: true }).code;
 
 let html = fs.readFileSync(path.join(root, "index.html"), "utf8");
+// タイトルを一文字ずつ span 化（CSS アニメーションだけで動くようにビルド時に仕込む）
+const titleSpans = Array.from("MiyakoNet")
+  .map((ch, i) => `<span style="animation-delay:${(0.2 + i * 0.07).toFixed(2)}s">${ch}</span>`)
+  .join("");
+html = html.replace("<h1>MiyakoNet</h1>", "<h1>" + titleSpans + "</h1>");
 // レンダリングブロックを無くすため、CSS は外部ファイルにせず <style> で埋め込む
 html = html.replace(
   '<link rel="stylesheet" href="css/miyako.css">',
