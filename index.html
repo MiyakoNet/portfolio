@@ -19,6 +19,7 @@
   <meta name="theme-color" content="#eef4fa">
   <link rel="canonical" href="https://miyako.net/">
   <link rel="icon" href="favicon.ico">
+  <link rel="preload" as="image" href="icon.webp" fetchpriority="high">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -71,7 +72,7 @@
       <p class="lede">人と触れ合うことや旅が好きで、人のために動くのも得意です。<br>作りたいと思ったものを、思ったままの形にしています。<br>いつかそれが誰かの笑顔につながれば嬉しいです。</p>
     </header>
 
-    <section id="about">
+    <section id="about" class="reveal">
       <h2>About</h2>
       <p class="intro">
         こんにちは、MiyakoNet と申します。<br>
@@ -83,11 +84,11 @@
       <ol class="record">
         <li>
           <span class="no">スキル</span>
-          <p>Python, トラフィック解析, リバースエンジニアリング</p>
+          <p>Python、トラフィック解析、リバースエンジニアリング</p>
         </li>
         <li>
           <span class="no">資格</span>
-          <p>高卒認定試験（18歳）, ITパスポート（19歳）</p>
+          <p>高卒認定試験（18歳）、ITパスポート（19歳）</p>
         </li>
         <li>
           <span class="no">好きなもの</span>
@@ -154,9 +155,9 @@
         <em>nicovideodl.jp</em>
         <span class="p-desc">2023 年 11 月から運営しているニコニコ動画の動画ダウンロードサイトです。Twitter で紹介された際には 1 万件以上のいいねを獲得しました。月間ユニークアクセス約 8,000 件以上、毎時 30 件以上、ピーク時には 100 件を超えるアクセスがあり、定番のダウンロードサイトとして利用されています（データ提供元: Cloudflare）</span>
         <span class="p-gallery">
-          <img src="nicovideodl1.webp" alt="nicovideodl.jp のスクリーンショット 1" loading="lazy">
-          <img src="nicovideodl2.webp" alt="nicovideodl.jp のスクリーンショット 2" loading="lazy">
-          <img src="nicovideodl3.webp" alt="nicovideodl.jp のスクリーンショット 3" loading="lazy">
+          <img src="nicovideodl1.webp" alt="nicovideodl.jp のスクリーンショット 1" width="880" height="495" loading="lazy">
+          <img src="nicovideodl2.webp" alt="nicovideodl.jp のスクリーンショット 2" width="880" height="495" loading="lazy">
+          <img src="nicovideodl3.webp" alt="nicovideodl.jp のスクリーンショット 3" width="880" height="495" loading="lazy">
         </span>
         <a class="p-more" href="https://nicovideodl.jp" target="_blank" rel="noopener" data-cfg="NICO_URL">サイトを見る →</a>
       </div>
@@ -217,10 +218,6 @@
     <button class="lightbox-nav lightbox-next" type="button" data-lb-next aria-label="次の画像">&rsaquo;</button>
     <p class="lightbox-count" id="lightbox-count"></p>
   </div>
-
-  <!-- Cloudflare Web Analytics -->
-  <script defer type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "2ce8dd8aed2e435088c93b0f6b5a7229"}'></script>
-  <!-- End Cloudflare Web Analytics -->
 
   <script src="config.js"></script>
   <script src="js/main.js" defer></script>

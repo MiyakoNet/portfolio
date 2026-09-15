@@ -109,6 +109,11 @@ body {
   transform: translateY(0);
 }
 
+/* 読み込み時に画面内だったセクションは、マストヘッドの後に登場 */
+.reveal.enter-anim {
+  animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.1s both;
+}
+
 /* ナビジャンプでは待たせない（即時表示・hover用のtransitionは後で戻る） */
 .no-anim,
 .no-anim .specimen li {
@@ -140,7 +145,7 @@ body {
 .topbar-title {
   letter-spacing: 0.14em;
   font-weight: bold;
-  color: #6e8db0;
+  color: #476489;
   font-size: 1.05rem;
   text-decoration: none;
 }
@@ -228,7 +233,7 @@ body {
 .masthead .date {
   font-size: 1rem;
   letter-spacing: 0.25em;
-  color: #92a7c4;
+  color: #5c6c88;
   margin-bottom: 28px;
 }
 
@@ -236,7 +241,8 @@ body {
 .typed {
   letter-spacing: 0.2em;
   font-weight: bold;
-  color: #5b8fc9;
+  font-size: 1.2rem;
+  color: #4d6fa5;
 }
 
 .caret {
@@ -259,7 +265,7 @@ body {
 }
 
 .masthead .lede {
-  color: #7d90ad;
+  color: #566682;
   margin: 0 auto 80px;
   max-width: 560px;
   font-size: 0.95rem;
@@ -364,7 +370,7 @@ h2::after {
   font-size: 0.85rem;
   font-weight: bold;
   letter-spacing: 0.12em;
-  color: #92a7c4;
+  color: #5c6c88;
   transition: color 0.25s;
 }
 
@@ -385,7 +391,7 @@ h2::after {
 .specimen .desc {
   display: block;
   font-size: 0.85rem;
-  color: #7d90ad;
+  color: #566682;
 }
 
 .specimen li a:hover {
@@ -664,7 +670,7 @@ h2::after {
   font-size: 0.8rem;
   font-weight: bold;
   letter-spacing: 0.3em;
-  color: #92a7c4;
+  color: #5c6c88;
   margin: 40px 0 18px;
 }
 
@@ -727,7 +733,7 @@ h2::after {
 .colophon {
   text-align: center;
   font-size: 0.8rem;
-  color: #92a7c4;
+  color: #5c6c88;
   letter-spacing: 0.15em;
 }
 
@@ -803,10 +809,14 @@ h2::after {
     opacity: 1;
   }
 
+  .js .reveal,
+  .js .reveal .specimen li,
   .reveal.pre,
-  .reveal.pre .specimen li {
+  .reveal.pre .specimen li,
+  .reveal.enter-anim {
     opacity: 1;
     transform: none;
     transition: none;
+    animation: none;
   }
 }

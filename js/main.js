@@ -11,8 +11,13 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0, rootMargin: "0px 0px -8% 0px" });
 
 document.querySelectorAll(".reveal").forEach((el) => {
-  if (el.getBoundingClientRect().top > window.innerHeight) {
+  const rect = el.getBoundingClientRect();
+  // 読み込み時に画面外（下 or 上）だったセクションだけ隠す
+  if (rect.top > window.innerHeight || rect.bottom < 0) {
     el.classList.add("pre");
+  } else if (el !== (location.hash ? document.querySelector(location.hash) : null)) {
+    // 画面内かつハッシュのジャンプ先でなければ、マストヘッドの後に登場させる
+    el.classList.add("enter-anim");
   }
   observer.observe(el);
 });
@@ -253,4 +258,13 @@ window.addEventListener("keydown", (e) => {
     lbIndex = (lbIndex + 1) % shots.length;
     showShot();
   }
+});
+
+// ===== Cloudflare Web Analytics（ロード完了後に読み込み、スピナーを長引かせない） =====
+window.addEventListener("load", () => {
+  const beacon = document.createElement("script");
+  beacon.type = "module";
+  beacon.src = "https://static.cloudflareinsights.com/beacon.min.js";
+  beacon.setAttribute("data-cf-beacon", '{"token": "2ce8dd8aed2e435088c93b0f6b5a7229"}');
+  document.body.appendChild(beacon);
 });
