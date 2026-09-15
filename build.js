@@ -47,14 +47,18 @@ for (let attempt = 0; attempt < 5; attempt++) {
 fs.mkdirSync(path.join(dist, "css"), { recursive: true });
 fs.mkdirSync(path.join(dist, "js"), { recursive: true });
 
-// config.js は dist と、ローカル開発用にルートにも出力
-fs.writeFileSync(path.join(dist, "config.js"), configJs);
+// config.js はローカル開発用にルートへ出力（dist では下記の通り HTML にインライン化）
 fs.writeFileSync(path.join(root, "config.js"), configJs);
 
-// ===== 3. index.html（minify 版の参照へ差し替え） =====
+// ===== 3. index.html（minify 版の参照へ差し替え + config をインライン化） =====
 let html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 html = html.replaceAll("css/miyako.css", "css/miyako.min.css");
 html = html.replaceAll("js/main.js", "js/main.min.js");
+// config.js へのリクエストを省くため、設定をインラインで埋め込む
+html = html.replaceAll(
+  '<script src="config.js"></script>',
+  "<script>window.SITE_CONFIG = " + JSON.stringify(config) + ";</script>"
+);
 fs.writeFileSync(path.join(dist, "index.html"), html);
 
 // ===== 4. CSS / JS を minify（コメント・空白を削除） =====
