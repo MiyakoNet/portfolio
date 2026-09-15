@@ -104,6 +104,19 @@ if (titleEl && !reduceMotion) {
   });
 }
 
+// 固定バーの高さに合わせてアンカーの停止位置を調整（折り返しで高さが変わるため）
+const topbar = document.querySelector(".topbar");
+function updateScrollMargin() {
+  if (!topbar) return;
+  const margin = topbar.offsetHeight + 12;
+  document.querySelectorAll("section[id], main > header.masthead").forEach((el) => {
+    el.style.scrollMarginTop = margin + "px";
+  });
+}
+window.addEventListener("resize", updateScrollMargin);
+window.addEventListener("load", updateScrollMargin);
+updateScrollMargin();
+
 // 今見ているセクションに合わせてナビを光らせる
 // （画面の上から 40% のラインを超えている一番下のセクション = 表示中）
 const sections = document.querySelectorAll("main section[id]");

@@ -271,9 +271,15 @@ section {
   margin-bottom: 120px;
 }
 
-/* アンカージャンプ時に固定バーの下に見出しが隠れないように */
+/* アンカージャンプ時に固定バーの下に見出しが隠れないように（JSで実高さに追従、これはフォールバック） */
 section[id] {
   scroll-margin-top: 104px;
+}
+
+@media (max-width: 720px) {
+  section[id] {
+    scroll-margin-top: 132px;
+  }
 }
 
 /* ===== 見出し ===== */
