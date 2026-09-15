@@ -76,7 +76,7 @@ fs.writeFileSync(
 
 // ===== 5. その他の静的ファイルをコピー =====
 const staticFiles = [
-  "favicon.png",
+  "favicon.ico",
   "icon.png",
   "icon.webp",
   "nicovideodl1.webp",
