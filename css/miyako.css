@@ -629,7 +629,7 @@ h2::after {
   transition: color 0.25s, border-color 0.25s;
 }
 
-.project-feature:hover .p-more {
+.project-feature .p-more:hover {
   color: #7aa8d8;
   border-bottom-color: #7aa8d8;
 }
