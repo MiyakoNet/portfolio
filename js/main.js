@@ -82,38 +82,21 @@ if (typedEl) {
   }
 }
 
-// ===== タブのタイトルをタイプライター表示（MiyakoNet をループ） =====
-const pageTitle = "MiyakoNet | ポートフォリオ・ソフトウェアエンジニア"; // SEO・動作無効環境用
-const loopTitle = "Miyako.Net";
-
+// ===== タブのタイトルをタイプライター表示 =====
+// SEO のため、完全なタイトルを 1 回タイプしたら確定する（ループ・消去はしない）
+const pageTitle = "MiyakoNet | ポートフォリオ・ソフトウェアエンジニア";
 if (reduceMotion) {
   document.title = pageTitle;
 } else {
-  // 空タイトルを避けるため 1 文字目から開始し、ループでも 1 文字は残す
   let titleIndex = 1;
-  document.title = loopTitle.slice(0, titleIndex);
-
-  function typeLoop() {
-    if (titleIndex < loopTitle.length) {
+  document.title = pageTitle.slice(0, titleIndex);
+  (function typeTitle() {
+    if (titleIndex < pageTitle.length) {
       titleIndex++;
-      document.title = loopTitle.slice(0, titleIndex);
-      setTimeout(typeLoop, 180);
-    } else {
-      setTimeout(eraseLoop, 2000);
+      document.title = pageTitle.slice(0, titleIndex);
+      setTimeout(typeTitle, 100);
     }
-  }
-
-  function eraseLoop() {
-    if (titleIndex > 1) {
-      titleIndex--;
-      document.title = loopTitle.slice(0, titleIndex);
-      setTimeout(eraseLoop, 90);
-    } else {
-      setTimeout(typeLoop, 600);
-    }
-  }
-
-  typeLoop();
+  })();
 }
 
 // ===== タイトルを一文字ずつ浮かせる（ビルド時に span が無い場合のみ＝ローカル開発用） =====
