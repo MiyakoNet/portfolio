@@ -1,0 +1,77 @@
+// ビルドスクリプト: 環境変数から config.js を生成し、
+// minify 済みのファイルを dist/ に書き出す（Vercel は dist を配信する）
+const fs = require("fs");
+const path = require("path");
+const esbuild = require("esbuild");
+
+const root = __dirname;
+const dist = path.join(root, "dist");
+
+// ===== 1. 設定の組み立て（.env / 環境変数 / デフォルト） =====
+const config = {
+  SITE_URL: "https://miyako.net",
+  TWITTER_URL: "https://x.com/MiyakoNet",
+  GITHUB_URL: "https://github.com/MiyakoNet",
+  TELEGRAM_URL: "https://t.me/miyako",
+  CONTACT_EMAIL: "contact@miyako.net",
+  NICO_URL: "https://nicovideodl.jp",
+  PORTFOLIO_REPO_URL: "https://github.com/MiyakoNet/portfolio",
+};
+
+const envFile = path.join(root, ".env");
+if (fs.existsSync(envFile)) {
+  for (const line of fs.readFileSync(envFile, "utf8").split(/\r?\n/)) {
+    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
+    if (m) config[m[1]] = m[2];
+  }
+}
+for (const key of Object.keys(config)) {
+  if (process.env[key]) config[key] = process.env[key];
+}
+
+const configJs = "window.SITE_CONFIG = " + JSON.stringify(config, null, 2) + ";\n";
+
+// ===== 2. dist を作り直す =====
+fs.rmSync(dist, { recursive: true, force: true });
+fs.mkdirSync(path.join(dist, "css"), { recursive: true });
+fs.mkdirSync(path.join(dist, "js"), { recursive: true });
+
+// config.js は dist と、ローカル開発用にルートにも出力
+fs.writeFileSync(path.join(dist, "config.js"), configJs);
+fs.writeFileSync(path.join(root, "config.js"), configJs);
+
+// ===== 3. index.html（minify 版の参照へ差し替え） =====
+let html = fs.readFileSync(path.join(root, "index.html"), "utf8");
+html = html.replaceAll("css/miyako.css", "css/miyako.min.css");
+html = html.replaceAll("js/main.js", "js/main.min.js");
+fs.writeFileSync(path.join(dist, "index.html"), html);
+
+// ===== 4. CSS / JS を minify（コメント・空白を削除） =====
+const css = fs.readFileSync(path.join(root, "css", "miyako.css"), "utf8");
+fs.writeFileSync(
+  path.join(dist, "css", "miyako.min.css"),
+  esbuild.transformSync(css, { loader: "css", minify: true }).code
+);
+
+const js = fs.readFileSync(path.join(root, "js", "main.js"), "utf8");
+fs.writeFileSync(
+  path.join(dist, "js", "main.min.js"),
+  esbuild.transformSync(js, { minify: true }).code
+);
+
+// ===== 5. その他の静的ファイルをコピー =====
+const staticFiles = [
+  "favicon.png",
+  "icon.png",
+  "icon.webp",
+  "nicovideodl1.webp",
+  "nicovideodl2.webp",
+  "nicovideodl3.webp",
+  "robots.txt",
+  "sitemap.xml",
+];
+for (const f of staticFiles) {
+  fs.copyFileSync(path.join(root, f), path.join(dist, f));
+}
+
+console.log("dist/ generated");
