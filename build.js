@@ -44,15 +44,21 @@ for (let attempt = 0; attempt < 5; attempt++) {
     }
   }
 }
-fs.mkdirSync(path.join(dist, "css"), { recursive: true });
 fs.mkdirSync(path.join(dist, "js"), { recursive: true });
 
 // config.js はローカル開発用にルートへ出力（dist では下記の通り HTML にインライン化）
 fs.writeFileSync(path.join(root, "config.js"), configJs);
 
-// ===== 3. index.html（minify 版の参照へ差し替え + config をインライン化） =====
+// ===== 3. index.html（CSS をインライン化 + minify JS 参照 + config をインライン化） =====
+const css = fs.readFileSync(path.join(root, "css", "miyako.css"), "utf8");
+const minCss = esbuild.transformSync(css, { loader: "css", minify: true }).code;
+
 let html = fs.readFileSync(path.join(root, "index.html"), "utf8");
-html = html.replaceAll("css/miyako.css", "css/miyako.min.css");
+// レンダリングブロックを無くすため、CSS は外部ファイルにせず <style> で埋め込む
+html = html.replace(
+  '<link rel="stylesheet" href="css/miyako.css">',
+  "<style>" + minCss + "</style>"
+);
 html = html.replaceAll("js/main.js", "js/main.min.js");
 // config.js へのリクエストを省くため、設定をインラインで埋め込む
 html = html.replaceAll(
@@ -61,13 +67,7 @@ html = html.replaceAll(
 );
 fs.writeFileSync(path.join(dist, "index.html"), html);
 
-// ===== 4. CSS / JS を minify（コメント・空白を削除） =====
-const css = fs.readFileSync(path.join(root, "css", "miyako.css"), "utf8");
-fs.writeFileSync(
-  path.join(dist, "css", "miyako.min.css"),
-  esbuild.transformSync(css, { loader: "css", minify: true }).code
-);
-
+// ===== 4. JS を minify（defer 付きなのでレンダリングブロックにはならない） =====
 const js = fs.readFileSync(path.join(root, "js", "main.js"), "utf8");
 fs.writeFileSync(
   path.join(dist, "js", "main.min.js"),
