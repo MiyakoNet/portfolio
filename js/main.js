@@ -82,9 +82,12 @@ if (typedEl) {
   }
 }
 
-// ===== タブのタイトルをタイプライター表示 =====
-// SEO のため、完全なタイトルを 1 回タイプしたら確定する（ループ・消去はしない）
+// ===== タブのタイトル =====
+// SEO: 完全タイトルをタイプして 15 秒間維持（Googlebot の取得に間に合わせる）
+// 通常閲覧者: 15 秒後にタブ表示用の短いタイトルへ切り替え
 const pageTitle = "MiyakoNet | ポートフォリオ・ソフトウェアエンジニア";
+const tabTitle = "Miyako.Net";
+
 if (reduceMotion) {
   document.title = pageTitle;
 } else {
@@ -98,6 +101,10 @@ if (reduceMotion) {
     }
   })();
 }
+
+setTimeout(() => {
+  document.title = tabTitle;
+}, 15000);
 
 // ===== タイトルを一文字ずつ浮かせる（ビルド時に span が無い場合のみ＝ローカル開発用） =====
 const titleEl = document.querySelector(".masthead h1");
