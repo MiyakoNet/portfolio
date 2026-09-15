@@ -3,5 +3,6 @@ node_modules/
 .env
 config.js
 dist/
+app.py
 .DS_Store
 Thumbs.db

@@ -31,8 +31,19 @@ for (const key of Object.keys(config)) {
 
 const configJs = "window.SITE_CONFIG = " + JSON.stringify(config, null, 2) + ";\n";
 
-// ===== 2. dist を作り直す =====
-fs.rmSync(dist, { recursive: true, force: true });
+// ===== 2. dist を作り直す（掴まっている場合は少し待って再試行） =====
+for (let attempt = 0; attempt < 5; attempt++) {
+  try {
+    fs.rmSync(dist, { recursive: true, force: true });
+    break;
+  } catch (e) {
+    if (attempt === 4) {
+      console.warn("dist の削除に失敗。既存ファイルを上書きして続行します");
+    } else {
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 500);
+    }
+  }
+}
 fs.mkdirSync(path.join(dist, "css"), { recursive: true });
 fs.mkdirSync(path.join(dist, "js"), { recursive: true });
 

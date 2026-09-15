@@ -49,16 +49,18 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.masthead .date,
-.masthead .lede {
+/* date / lede / タイトルの文字は CSS アニメーション（JSが無くても必ず表示される） */
+.masthead .date {
   opacity: 0;
-  animation: fadeUp 0.8s ease forwards;
+  animation: fadeUp 0.8s ease 0.1s forwards;
 }
 
-.masthead .date { animation-delay: 0.1s; }
-.masthead .lede { animation-delay: 0.9s; }
+.masthead .lede {
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.9s forwards;
+}
 
-/* タイトルを一文字ずつ浮かせる */
+/* タイトルを一文字ずつ浮かせる（span は JS が生成するため、無い場合は素のテキストが表示される） */
 .masthead h1 span {
   display: inline-block;
   opacity: 0;
@@ -70,7 +72,9 @@ body {
   to   { opacity: 1; transform: translateY(0) rotate(0deg); }
 }
 
-.reveal {
+/* 「初期位置が画面外」のセクションだけ JS が .pre を付ける。
+   読み込み中にアンカーでジャンプしても .pre が付かないため必ず表示される */
+.reveal.pre {
   opacity: 0;
   transform: translateY(48px);
   transition:
@@ -78,31 +82,37 @@ body {
     transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.reveal.is-visible {
+.reveal.pre.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* 作品カードは段差を持って現れる */
-.reveal .specimen li {
+.reveal.pre .specimen li {
   opacity: 0;
   transform: translateY(36px);
   transition:
     opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.reveal.is-visible .specimen li:nth-child(1) { transition-delay: 0.2s; }
+.reveal.pre.is-visible .specimen li:nth-child(1) { transition-delay: 0.2s; }
 
-.reveal.is-visible .specimen li:nth-child(2) { transition-delay: 0.38s; }
+.reveal.pre.is-visible .specimen li:nth-child(2) { transition-delay: 0.38s; }
 
-.reveal.is-visible .specimen li:nth-child(3) { transition-delay: 0.56s; }
+.reveal.pre.is-visible .specimen li:nth-child(3) { transition-delay: 0.56s; }
 
-.reveal.is-visible .specimen li:nth-child(4) { transition-delay: 0.74s; }
+.reveal.pre.is-visible .specimen li:nth-child(4) { transition-delay: 0.74s; }
 
-.reveal.is-visible .specimen li:nth-child(5) { transition-delay: 0.92s; }
-.reveal.is-visible .specimen li {
+.reveal.pre.is-visible .specimen li:nth-child(5) { transition-delay: 0.92s; }
+.reveal.pre.is-visible .specimen li {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ナビジャンプでは待たせない（即時表示・hover用のtransitionは後で戻る） */
+.no-anim,
+.no-anim .specimen li {
+  transition: none !important;
 }
 
 /* ===== 上のナビゲーションバー ===== */
@@ -256,10 +266,7 @@ body {
   text-align: left;
 }
 
-/* ===== 自己紹介（About は最初から表示、マストヘッドのあとに登場） ===== */
-#about {
-  animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
-}
+/* ===== 自己紹介 ===== */
 
 .intro {
   margin-bottom: 48px;
@@ -501,6 +508,27 @@ h2::after {
   box-shadow: 0 6px 16px rgba(53, 97, 155, 0.16);
 }
 
+/* 幅が狭い場合は2列（縦型モニターの高拡大環境でも破綻しないように） */
+@media (max-width: 720px) {
+  .p-gallery {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .p-gallery img {
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-position: center;
+  }
+}
+
+/* 本当に狭い（スマホ縦）場合は1列 */
+@media (max-width: 480px) {
+  .p-gallery {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ===== 画像の拡大表示（ライトボックス） ===== */
 .lightbox {
   position: fixed;
@@ -642,17 +670,17 @@ h2::after {
 
 .social {
   list-style: none;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
 }
 
 .social a {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 12px 22px;
+  padding: 12px 0;
   background: #fbfdff;
   border: 1px solid #dde7f2;
   color: #46557a;
@@ -671,7 +699,15 @@ h2::after {
 .social svg {
   width: 18px;
   height: 18px;
+  flex-shrink: 0;
   fill: currentColor;
+}
+
+/* スマホでは2×2に並べる */
+@media (max-width: 720px) {
+  .social {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .letter a {
@@ -862,8 +898,7 @@ h2::after {
   }
 
   .masthead .date,
-  .masthead .lede,
-  #about {
+  .masthead .lede {
     animation: none;
     opacity: 1;
   }
@@ -873,8 +908,8 @@ h2::after {
     opacity: 1;
   }
 
-  .reveal,
-  .reveal .specimen li {
+  .reveal.pre,
+  .reveal.pre .specimen li {
     opacity: 1;
     transform: none;
     transition: none;

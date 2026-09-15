@@ -1,4 +1,6 @@
-// スクロールで要素をふわっと出す（画面下 8% を超えたら発火）
+// スクロールで要素をふわっと出す
+// （「初期位置が画面外」のセクションにだけ .pre を付けて隠す。
+//   読み込み中にアンカーでジャンプした先は画面内なので一度も隠れず、必ず表示される）
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
@@ -8,12 +10,30 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0, rootMargin: "0px 0px -8% 0px" });
 
-document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+document.querySelectorAll(".reveal").forEach((el) => {
+  if (el.getBoundingClientRect().top > window.innerHeight) {
+    el.classList.add("pre");
+  }
+  observer.observe(el);
+});
 
 // ロゴを押したら一番上へ戻る
 document.querySelector(".topbar-title").addEventListener("click", (e) => {
   e.preventDefault();
   window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+// ナビでの移動先はアニメーションを待たせず即時表示する
+document.querySelectorAll(".topbar-nav a").forEach((link) => {
+  link.addEventListener("click", () => {
+    const target = document.querySelector(link.getAttribute("href"));
+    if (!target || !target.classList.contains("reveal")) return;
+    target.classList.add("no-anim", "is-visible");
+    // 次のフレームで no-anim を外し、hover などの transition を復帰させる
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => target.classList.remove("no-anim"));
+    });
+  });
 });
 
 // ===== マストヘッドのタイプライター表示 =====
