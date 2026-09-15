@@ -78,7 +78,7 @@ if (typedEl) {
 }
 
 // ===== タブのタイトルをタイプライター表示（MiyakoNet をループ） =====
-const pageTitle = "MiyakoNet | ポートフォリオ・実績一覧"; // SEO・動作無効環境用
+const pageTitle = "MiyakoNet | ポートフォリオ・ソフトウェアエンジニア"; // SEO・動作無効環境用
 const loopTitle = "Miyako.Net";
 
 if (reduceMotion) {
